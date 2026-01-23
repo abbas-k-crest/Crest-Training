@@ -9,7 +9,6 @@ select replace('Hello is the is what', 'is', 'changed')
 select replace('What a wonderful world', 'a', 'an')
 
 
-
 select * from test
 
 select
