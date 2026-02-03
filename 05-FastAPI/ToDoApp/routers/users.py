@@ -5,8 +5,8 @@ from starlette import status
 from pydantic import BaseModel, Field
 from passlib.context import CryptContext
 
-from database import engine, session_local
-from models import Todos, Users
+from ..database import engine, session_local
+from ..models import Todos, Users
 from .auth import get_current_user
 
 router = APIRouter(
@@ -71,6 +71,26 @@ async def update_password(
     db.add(user_model)
     db.commit()
 
+
+@router.put("/update/phone_number/{phone_number}", status_code=status.HTTP_204_NO_CONTENT)
+async def update_phone_number(
+    user: user_dependency,
+    db: db_dependency,
+    phone_number: str
+    ):
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+        )
+    
+    user_model = db.query(Users).filter(Users.id==user.get("user_id")).first()
+
+    user_model.phone_number = phone_number
+    db.add(user_model)
+    db.commit()
+    
 
 
 

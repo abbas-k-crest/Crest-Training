@@ -8,8 +8,8 @@ from starlette import status
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 
-from database import session_local
-from models import Users
+from ..database import session_local
+from ..models import Users
 
 
 router = APIRouter(
@@ -30,6 +30,7 @@ class CreateUserRequest(BaseModel):
     first_name: str
     last_name: str
     role: str
+    phone_number: str
     
 class Token(BaseModel):
     access_token: str
@@ -103,7 +104,8 @@ async def create_user(
         last_name=user_request.last_name,
         role=user_request.role,
         hashed_password=bcrypt_context.hash(user_request.password),  # hash the password
-        is_active=True
+        is_active=True,
+        phone_number=user_request.phone_number
     )
 
     # save to database

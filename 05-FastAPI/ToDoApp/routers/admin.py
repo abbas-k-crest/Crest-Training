@@ -4,8 +4,8 @@ from typing import Annotated, Optional
 from starlette import status
 from pydantic import BaseModel, Field
 
-from database import engine, session_local
-from models import Todos
+from ..database import engine, session_local
+from ..models import Todos
 from .auth import get_current_user
 
 router = APIRouter(

@@ -4,8 +4,8 @@ from typing import Annotated, Optional
 from starlette import status
 from pydantic import BaseModel, Field
 
-from database import engine, session_local
-from models import Todos
+from ..database import engine, session_local
+from ..models import Todos
 from .auth import get_current_user
 
 router = APIRouter()
@@ -13,7 +13,7 @@ router = APIRouter()
 class ToDoCreateRequest(BaseModel):
     title: str = Field(min_length=1)
     description: Optional[str] = Field(default=None)
-    priority: int = Field(gt=0, lt=4)
+    priority: int = Field(gt=0, lt=6)
     completed: bool = Field(default=False)
 
 
