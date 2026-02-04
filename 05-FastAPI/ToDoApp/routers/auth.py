@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from pydantic import BaseModel, Field
 from passlib.context import CryptContext
@@ -21,7 +22,7 @@ SECRET_KEY = "783ccbf3e2006d425ba70e14520efec694771bc9bf1343bc145ab4ef347d7170"
 ALGORITHM = "HS256"
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 class CreateUserRequest(BaseModel):
     username: str 
@@ -90,6 +91,21 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
             detail="Could not validate credentials",
         )
 
+templates = Jinja2Templates(directory="TodoApp/templates")
+
+
+### Pages ###
+
+@router.get("/login-page")
+def render_login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@router.get("/register-page")
+def render_register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
+## Endpoints ##
 
 @router.post("/create_user", status_code=status.HTTP_201_CREATED) 
 async def create_user(
